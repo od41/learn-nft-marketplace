@@ -1,3 +1,5 @@
+use crate::*;
+
 fn nft_on_approve(
     &mut self,
     token_id: TokenId,
