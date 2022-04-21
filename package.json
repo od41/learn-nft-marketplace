@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "npm run build:contract && npm run build:web",
-    "build:contract": "node nft-contract/compile.js && node market-contract/compile.js",
+    "build:contract": "node nft-contract/compile.js",
     "build:contract:debug": "node nft-contract/compile.js --debug && node market-contract/compile.js --debug",
     "build:web": "parcel build src/index.html --public-url ./",
     "dev:deploy:contract": "near dev-deploy",

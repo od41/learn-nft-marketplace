@@ -37,6 +37,13 @@ pub type SalePriceInYoctoNear = U128;
 pub type TokenId = String;
 pub type FungibleTokenId = AccountId;
 pub type ContractAndTokenId = String;
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct SaleArgs {
+    pub sale_conditions: SalePriceInYoctoNear,
+}
+    
 //defines the payout type we'll be parsing from the NFT contract as a part of the royalty standard.
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -44,12 +51,20 @@ pub struct Payout {
     pub payout: HashMap<AccountId, U128>,
 } 
 
+// main contract struct to store all the information
+#[near_bindgen]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
+pub struct Contract {
+    pub owner_id: AccountId,
+    pub sales: UnorderedMap<ContractAndTokenId, Sale>,
+    pub by_owner_id: LookupMap<AccountId, UnorderedSet<ContractAndTokenId>>,
+    pub by_nft_contract_id: LookupMap<AccountId, UnorderedSet<TokenId>>,
+    pub storage_deposits: LookupMap<AccountId, Balance>
+}
 
 //main contract struct to store all the information
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
-
-pub struct Contract {
+impl Contract {
     #[init]
     pub fn new (owner_id: AccountId) -> Self {
         let this = Self {
@@ -103,11 +118,5 @@ pub struct Contract {
         if diff > 0 {
             self.storage_deposits.insert(&owner_id, &diff);
         }
-    }
-
-    #[derive(Serialize, Deserialize)]
-    #[serde(crate = "near_sdk::serde")]
-    pub struct SaleArgs {
-        pub sale_conditions: SalePriceInYoctoNear,
     }
 }
