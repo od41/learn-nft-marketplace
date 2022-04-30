@@ -41,6 +41,9 @@ pub struct TokenMetadata {
 #[serde(crate="near_sdk::serde")]
 pub struct Token {
     pub owner_id: AccountId,
+    pub approved_account_ids: HashMap<AccountId, u64>,
+    pub next_approval_id: u64,
+    pub royalty: HashMap<AccountId, u32>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -49,6 +52,8 @@ pub struct JsonToken {
     pub token_id: TokenId,
     pub owner_id: AccountId,
     pub metadata: TokenMetadata,
+    pub approved_account_ids: HashMap<AccountId, u64>,
+    pub royalty: HashMap<AccountId, u32>,
 }
 
 pub trait NonFungibleTokenMetadata {
